@@ -19,7 +19,8 @@ app.post("/summarize", async (req, res) => {
     
     // Use axios with the custom HTTPS agent
     const response = await axios.post(
-      "https://api.generativeai.googleapis.com/v1beta2/models/text-bison-001:generate",
+      "https://generativelanguage.googleapis.com/v1beta2/models/text-bison-001:generate
+",
       { prompt: { text: text } },
       {
         headers: { Authorization: `Bearer ${process.env.GEMINI_API_KEY}` },
@@ -35,5 +36,6 @@ app.post("/summarize", async (req, res) => {
 });
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
 
 
