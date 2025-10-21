@@ -1,41 +1,35 @@
-// server.js
 import express from "express";
-import cors from "cors";
-import axios from "axios";
-import https from "https"; // ✅ add this at the top
+import fetch from "node-fetch";
+import 'dotenv/config';
+
 
 const app = express();
-app.use(cors());
 app.use(express.json());
 
-const PORT = process.env.PORT || 3000;
+app.post("/api/generate", async (req, res) => {
+  const { prompt } = req.body;
 
-// Create HTTPS agent that ignores invalid certs
-const agent = new https.Agent({ rejectUnauthorized: false }); // ✅ add this after imports
-
-app.post("/summarize", async (req, res) => {
   try {
-    const { text } = req.body;
-    
-    // Use axios with the custom HTTPS agent
-    const response = await axios.post(
-      "https://generativelanguage.googleapis.com/v1beta2/models/text-bison-001:generate",
-      { prompt: { text: text } },
+    const response = await fetch(
+      "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash-latest:generateContent?key=" + process.env.GEMINI_API_KEY
+ + process.env.API_KEY,
       {
-        headers: { Authorization: `Bearer ${process.env.GEMINI_API_KEY}` },
-        httpsAgent: agent // ✅ add this here
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }]
+        }),
       }
     );
 
-    res.json(response.data); // send summary back
-  } catch (err) {
-    console.error(err.response?.data || err.message);
-    res.status(500).json({ error: err.message });
+    const data = await response.json();
+    res.send(data);
+  } catch (error) {
+    res.status(500).send({ error: error.message });
   }
 });
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
+app.listen(3000, () => console.log("Server running on port 3000"));
 
 
 
