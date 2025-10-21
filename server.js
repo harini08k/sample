@@ -1,7 +1,8 @@
 import express from "express";
 import fetch from "node-fetch";
-import 'dotenv/config';
+import dotenv from "dotenv";
 
+dotenv.config();
 
 const app = express();
 app.use(express.json());
@@ -11,8 +12,7 @@ app.post("/api/generate", async (req, res) => {
 
   try {
     const response = await fetch(
-      "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash-latest:generateContent?key=" + process.env.GEMINI_API_KEY
- + process.env.API_KEY,
+      "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash-latest:generateContent?key=" + process.env.GEMINI_API_KEY,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -25,12 +25,11 @@ app.post("/api/generate", async (req, res) => {
     const data = await response.json();
     res.send(data);
   } catch (error) {
+    console.error(error);
     res.status(500).send({ error: error.message });
   }
 });
 
-app.listen(3000, () => console.log("Server running on port 3000"));
-
-
-
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
