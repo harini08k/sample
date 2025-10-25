@@ -2,7 +2,7 @@
 import dotenv from "dotenv";
 import express from "express";
 import fetch from "node-fetch";
-import dotenv from "dotenv";
+
 import cors from "cors"; 
 const fetch = require("node-fetch");
 const express = require("express");
@@ -46,6 +46,7 @@ app.post("/ask", async (req, res) => {
 });
 
 app.listen(3000, () => console.log("Server running on port 3000"));
+
 
 
 
